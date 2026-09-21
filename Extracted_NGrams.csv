@@ -1,0 +1,60 @@
+Words,water,safety,waste,road,Total,Included Categories,,,,,,,water,safety,waste,road
+access,0,1,0,2,3,2,,,Unchallenged predictors,,,access,0%,33%,0%,67%
+area,0,1,2,1,4,3,,,Weak Predictors,,,area,0%,25%,50%,25%
+bin,0,0,4,0,4,1,,,Confounding Predictors,,,bin,0%,0%,100%,0%
+blocked,2,0,0,0,2,1,,,,,,blocked,100%,0%,0%,0%
+broken,0,2,1,1,4,3,,,,,,broken,0%,50%,25%,25%
+causing,2,0,0,1,3,2,,,,,,causing,67%,0%,0%,33%
+channel,2,0,0,0,2,1,,,,,,channel,100%,0%,0%,0%
+collection,0,0,2,0,2,1,,,,,,collection,0%,0%,100%,0%
+cover,2,0,0,0,2,1,,,,,,cover,100%,0%,0%,0%
+damaged,0,1,0,1,2,2,,,,,,damaged,0%,50%,0%,50%
+days,1,0,1,0,2,2,,,,,,days,50%,0%,50%,0%
+difficult,0,0,0,2,2,1,,,,,,difficult,0%,0%,0%,100%
+drain,4,0,0,0,4,1,,,,,,drain,100%,0%,0%,0%
+drain cover,2,0,0,0,2,1,,,,,,drain cover,100%,0%,0%,0%
+entrance,0,1,1,0,2,2,,,,,,entrance,0%,50%,50%,0%
+faded,0,0,0,2,2,1,,,,,,faded,0%,0%,0%,100%
+flowing,2,0,1,0,3,2,,,,,,flowing,67%,0%,33%,0%
+footpath,2,1,0,0,3,2,,,,,,footpath,67%,33%,0%,0%
+glass,0,1,1,1,3,3,,,,,,glass,0%,33%,33%,33%
+handrail,0,2,0,0,2,1,,,,,,handrail,0%,100%,0%,0%
+homes,1,0,1,0,2,2,,,,,,homes,50%,0%,50%,0%
+kerb,1,0,0,1,2,2,,,,,,kerb,50%,0%,0%,50%
+lane,0,0,0,2,2,1,,,,,,lane,0%,0%,0%,100%
+large,0,1,0,1,2,2,,,,,,large,0%,50%,0%,50%
+leak,3,0,0,0,3,1,,,,,,leak,100%,0%,0%,0%
+left,0,1,0,1,2,2,,,,,,left,0%,50%,0%,50%
+litter,0,0,2,0,2,1,,,,,,litter,0%,0%,100%,0%
+loose,0,3,0,3,6,2,,,,,,loose,0%,50%,0%,50%
+missed,0,0,2,0,2,1,,,,,,missed,0%,0%,100%,0%
+missing,2,0,0,0,2,1,,,,,,missing,100%,0%,0%,0%
+near,6,0,1,2,9,3,,,,,,near,67%,0%,11%,22%
+near playground,1,0,1,0,2,2,,,,,,near playground,50%,0%,50%,0%
+needs,0,1,1,0,2,2,,,,,,needs,0%,50%,50%,0%
+needs urgent,0,1,1,0,2,2,,,,,,needs urgent,0%,50%,50%,0%
+night,0,1,1,1,3,3,,,,,,night,0%,33%,33%,33%
+outside,0,1,0,1,2,2,,,,,,outside,0%,50%,0%,50%
+park,1,0,2,1,4,3,,,,,,park,25%,0%,50%,25%
+pipe,2,0,0,0,2,1,,,,,,pipe,100%,0%,0%,0%
+playground,1,3,1,0,5,3,,,,,,playground,20%,60%,20%,0%
+pothole,0,0,0,3,3,1,,,,,,pothole,0%,0%,0%,100%
+public,0,1,2,0,3,2,,,,,,public,0%,33%,67%,0%
+rain,4,0,0,0,4,1,,,,,,rain,100%,0%,0%,0%
+recycling,0,0,3,0,3,1,,,,,,recycling,0%,0%,100%,0%
+reserve,1,1,1,0,3,3,,,,,,reserve,33%,33%,33%,0%
+risk,1,0,0,1,2,2,,,,,,risk,50%,0%,0%,50%
+road,1,1,1,2,5,4,,,,,,road,20%,20%,20%,40%
+rubbish,0,0,4,0,4,1,,,,,,rubbish,0%,0%,100%,0%
+shops,0,1,1,0,2,2,,,,,,shops,0%,50%,50%,0%
+smell,2,0,1,0,3,2,,,,,,smell,67%,0%,33%,0%
+street,0,2,1,2,5,3,,,,,,street,0%,40%,20%,40%
+streetlight,0,2,0,0,2,1,,,,,,streetlight,0%,100%,0%,0%
+strong,2,0,0,1,3,2,,,,,,strong,67%,0%,0%,33%
+surface,2,0,0,0,2,1,,,,,,surface,100%,0%,0%,0%
+traffic,0,0,0,2,2,1,,,,,,traffic,0%,0%,0%,100%
+unsafe,0,2,0,0,2,1,,,,,,unsafe,0%,100%,0%,0%
+urgent,0,1,1,1,3,3,,,,,,urgent,0%,33%,33%,33%
+walkway,1,1,0,0,2,2,,,,,,walkway,50%,50%,0%,0%
+waste,1,0,2,0,3,2,,,,,,waste,33%,0%,67%,0%
+water,8,0,0,0,8,1,,,,,,water,100%,0%,0%,0%

@@ -1,29 +1,25 @@
 # import pandas as pd
 from data_process_lib import *
 
+
+cleaning_feedback = False
+vectoriser_feedback = True
+
 # Import data
 df = pd.read_csv('BCIT601_starter_service_requests_dataset.csv')
+# clean data
+df = clean_training_data(df,cleaning_feedback)
 
-#Remove excess columns before testing for duplicates
-df = df.drop(columns=['request_id','priority','date_reported'])
-#Remove duplicates
-df.remove_duplicates()
+# Prep training data
+x_train, x_test, y_train, y_test = split_training_data(df)
+#print(x_train)
 
-print(df)
-# force lowercase
+# Vectorise data
+x_train_vec, x_test_vec = vectorize_text(x_train, x_test, vectoriser_feedback)
 
-""" def lower_array(array):
-    return [request.lower() for item in array]
-lowered_requests = [request.lower() for request in requests]
-lowered_requests = lower_array(requests) """
-
-# remove duplicates
+# export_cols_to_csv("training_data.csv", x_train,y_train)
 
 
-# df.to_csv('clean_data.csv', index=False)
-
-# remove punctuation
-
-# remove stop words
 
 # Export cleaned data
+# df.to_csv('clean_data.csv', index=False)
