@@ -115,21 +115,16 @@ def test_models_repeated(df, model_type,random_states):
     for random_state in random_states:
         x_train, x_test, y_train, y_test = split_training_data(df,random_state)
         x_train_vec, x_test_vec, feature_list = vectorize_text(x_train, x_test)
-        if model_type == 'log_reg':
+        if model_type == 'any' or model_type == 'log_reg':
             clf_preds, acc = test_log_regres(x_train_vec,x_test_vec,y_train,y_test,False)
-            clf_result = pd.DataFrame({
-                "Request_text" : x_test.reset_index(drop=True),
-                "True category" : y_test.reset_index(drop=True),
-                "Predicted Category" : clf_preds
-            })
-        if model_type == 'multi_nb':
+        if model_type == 'any' or model_type == 'multi_nb':
             clf_preds, acc = test_multinomial_nb(x_train_vec,x_test_vec,y_train,y_test,False)
-            clf_result = pd.DataFrame({
-                "Request_text" : x_test.reset_index(drop=True),
-                "True category" : y_test.reset_index(drop=True),
-                "Predicted Category" : clf_preds
-            })
-            
+
+        clf_result = pd.DataFrame({
+            "Request_text" : x_test.reset_index(drop=True),
+            "True category" : y_test.reset_index(drop=True),
+            "Predicted Category" : clf_preds
+        })          
         feature_df = pd.DataFrame({"Feature List": feature_list})
         accuracy = pd.DataFrame({"Accuracy": [acc]})
         output = pd.concat([clf_result,feature_df,accuracy],axis=1)
@@ -137,16 +132,11 @@ def test_models_repeated(df, model_type,random_states):
 
         output.to_excel(writer, sheet_name=f"rand_{random_state}")
     writer.close()
-#        output.to_csv(f"{model_type}_rnd_{random_state}.csv", index=False)
 
 
 
 
         
-    if model_type == 'multi_nb':
-        test_multinomial_nb(x_train_vec,x_test_vec,y_train,y_test,False)
-
-    pass
 
 
 # Archived code:
@@ -154,3 +144,5 @@ def test_models_repeated(df, model_type,random_states):
 # df['request_text'] = df['request_text'].str.replace(r'[^a-z\s]', '', regex=True)
 # New code. Uses \w to match any 'word' character, then | \d | _ to remove digits and underscores:
 # df['request_text'] = df['request_text'].str.replace(r'[^\w\s]|\d|_', '', regex=True)
+
+#output.to_csv(f"{model_type}_rnd_{random_state}.csv", index=False)

@@ -7,6 +7,7 @@ vectoriser_feedback = False
 export_training_data = False
 model_type = 'log_reg'
 test_model_feedback = False
+run_repeat_tests = False
 
 # Import data
 df = pd.read_csv('BCIT601_starter_service_requests_dataset.csv')
@@ -25,15 +26,9 @@ if export_training_data:
 del feature_list
 
 
-#Build the models
-if test_model_feedback:
-    test_text = x_test.reset_index(drop=True)
-    test_true_cat = y_test.reset_index(drop=True)
-
-
+#Build and test the models
 if model_type == 'any' or model_type == 'log_reg':
     log_preds, _ = test_log_regres(x_train_vec,x_test_vec,y_train,y_test,test_model_feedback)
-
     if test_model_feedback:
         log_reg_result = pd.DataFrame({
             "Request_text" : x_test.reset_index(drop=True),
@@ -41,7 +36,6 @@ if model_type == 'any' or model_type == 'log_reg':
             "Predicted Category" : log_preds
         })
         print(log_reg_result.to_string(index=False))
-
 
 if model_type == 'any' or model_type == 'multi_nb':
     nb_preds, _ = test_multinomial_nb(x_train_vec,x_test_vec,y_train,y_test,test_model_feedback)
@@ -56,7 +50,10 @@ if model_type == 'any' or model_type == 'multi_nb':
 
 
 random_states = [42,1,2,3,4,5,6,7,8,9]
-# test_models_repeated(df, model_type,random_states)
+if run_repeat_tests:
+    test_models_repeated(df, model_type,random_states)
+
+
 
 # Export cleaned data
 # df.to_csv('clean_data.csv', index=False)
