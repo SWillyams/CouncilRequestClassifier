@@ -85,29 +85,68 @@ def export_cols_to_csv(filename: str, *cols) -> None:
 
     export_df.to_csv(filename, index=False)
 
-def build_log_regres(x_train_vec, x_test_vec, y_train, y_test, echo_feedback=False):
+def test_log_regres(x_train_vec, x_test_vec, y_train, y_test, echo_feedback=False):
 
     #  *, C=1.0, l1_ratio=0.0, dual=False, tol=0.0001, fit_intercept=True, 
     # intercept_scaling=1, class_weight=None, random_state=None, solver='lbfgs', 
     # max_iter=100, verbose=0, warm_start=False, n_jobs=None
     classifier = LogisticRegression(max_iter=1000)
     classifier.fit(x_train_vec, y_train)
+    preds = classifier.predict(x_test_vec)
+    acc = accuracy_score(y_test, preds)
     if echo_feedback:
-        preds = classifier.predict(x_test_vec)
-        acc = accuracy_score(y_test, preds)
         print(f"Logistic Regression accuracy: {acc:.3f}")
-        classification_report(y_test, preds)
+        
 
-def build_multinomial_nb(x_train_vec, x_test_vec, y_train, y_test, echo_feedback=False):
+    return preds, acc
+#        print(classification_report(y_test, preds, zero_division=0))
+
+def test_multinomial_nb(x_train_vec, x_test_vec, y_train, y_test, echo_feedback=False):
     classifier = MultinomialNB()
     classifier.fit(x_train_vec, y_train)
+    preds = classifier.predict(x_test_vec)
+    acc = accuracy_score(y_test, preds)
     if echo_feedback:
-        preds = classifier.predict(x_test_vec)
-        acc = accuracy_score(y_test, preds)
-        print(f"MultinomialNB accuracy: {acc:.3f}")
-        classification_report(y_test, preds)
+        print(f"Naive Bayesian accuracy: {acc:.3f}")
+    return preds, acc
+
+def test_models_repeated(df, model_type,random_states):
+    writer = pd.ExcelWriter(f"{model_type}_tests.xlsx", engine='xlsxwriter')
+    for random_state in random_states:
+        x_train, x_test, y_train, y_test = split_training_data(df,random_state)
+        x_train_vec, x_test_vec, feature_list = vectorize_text(x_train, x_test)
+        if model_type == 'log_reg':
+            clf_preds, acc = test_log_regres(x_train_vec,x_test_vec,y_train,y_test,False)
+            clf_result = pd.DataFrame({
+                "Request_text" : x_test.reset_index(drop=True),
+                "True category" : y_test.reset_index(drop=True),
+                "Predicted Category" : clf_preds
+            })
+        if model_type == 'multi_nb':
+            clf_preds, acc = test_multinomial_nb(x_train_vec,x_test_vec,y_train,y_test,False)
+            clf_result = pd.DataFrame({
+                "Request_text" : x_test.reset_index(drop=True),
+                "True category" : y_test.reset_index(drop=True),
+                "Predicted Category" : clf_preds
+            })
+            
+        feature_df = pd.DataFrame({"Feature List": feature_list})
+        accuracy = pd.DataFrame({"Accuracy": [acc]})
+        output = pd.concat([clf_result,feature_df,accuracy],axis=1)
 
 
+        output.to_excel(writer, sheet_name=f"rand_{random_state}")
+    writer.close()
+#        output.to_csv(f"{model_type}_rnd_{random_state}.csv", index=False)
+
+
+
+
+        
+    if model_type == 'multi_nb':
+        test_multinomial_nb(x_train_vec,x_test_vec,y_train,y_test,False)
+
+    pass
 
 
 # Archived code:
