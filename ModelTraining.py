@@ -6,7 +6,7 @@ cleaning_feedback = False
 vectoriser_feedback = False
 export_training_data = False
 model_type = 'log_reg'
-test_model_feedback = False
+test_model_feedback = True
 run_repeat_tests = False
 
 # Import data

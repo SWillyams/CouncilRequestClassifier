@@ -46,7 +46,7 @@ def clean_training_data(input_df: pd.DataFrame, echo_feedback: bool=False) -> pd
 
     return df
 
-def split_training_data(df,rand_state=42):
+def split_training_data(df,rand_state=2):
     x = df['request_text']
     y = df['category']
     
@@ -92,23 +92,24 @@ def test_log_regres(x_train_vec, x_test_vec, y_train, y_test, echo_feedback=Fals
     # max_iter=100, verbose=0, warm_start=False, n_jobs=None
     classifier = LogisticRegression(max_iter=1000)
     classifier.fit(x_train_vec, y_train)
-    preds = classifier.predict(x_test_vec)
-    acc = accuracy_score(y_test, preds)
+    predictions = classifier.predict(x_test_vec)
+    accuracy = accuracy_score(y_test, predictions)
     if echo_feedback:
-        print(f"Logistic Regression accuracy: {acc:.3f}")
+        print(f"Logistic Regression accuracy: {accuracy:.3f}")
+        print(classification_report(y_test,predictions))
         
 
-    return preds, acc
+    return predictions, accuracy
 #        print(classification_report(y_test, preds, zero_division=0))
 
 def test_multinomial_nb(x_train_vec, x_test_vec, y_train, y_test, echo_feedback=False):
     classifier = MultinomialNB()
     classifier.fit(x_train_vec, y_train)
-    preds = classifier.predict(x_test_vec)
-    acc = accuracy_score(y_test, preds)
+    predictions = classifier.predict(x_test_vec)
+    accuracy = accuracy_score(y_test, predictions)
     if echo_feedback:
-        print(f"Naive Bayesian accuracy: {acc:.3f}")
-    return preds, acc
+        print(f"Naive Bayesian accuracy: {accuracy:.3f}")
+    return predictions, accuracy
 
 def test_models_repeated(df, model_type,random_states):
     writer = pd.ExcelWriter(f"{model_type}_tests.xlsx", engine='xlsxwriter')
@@ -116,14 +117,14 @@ def test_models_repeated(df, model_type,random_states):
         x_train, x_test, y_train, y_test = split_training_data(df,random_state)
         x_train_vec, x_test_vec, feature_list = vectorize_text(x_train, x_test)
         if model_type == 'any' or model_type == 'log_reg':
-            clf_preds, acc = test_log_regres(x_train_vec,x_test_vec,y_train,y_test,False)
+            clf_predictions, acc = test_log_regres(x_train_vec,x_test_vec,y_train,y_test,False)
         if model_type == 'any' or model_type == 'multi_nb':
-            clf_preds, acc = test_multinomial_nb(x_train_vec,x_test_vec,y_train,y_test,False)
+            clf_predictions, acc = test_multinomial_nb(x_train_vec,x_test_vec,y_train,y_test,False)
 
         clf_result = pd.DataFrame({
             "Request_text" : x_test.reset_index(drop=True),
             "True category" : y_test.reset_index(drop=True),
-            "Predicted Category" : clf_preds
+            "Predicted Category" : clf_predictions
         })          
         feature_df = pd.DataFrame({"Feature List": feature_list})
         accuracy = pd.DataFrame({"Accuracy": [acc]})
