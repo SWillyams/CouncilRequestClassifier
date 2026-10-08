@@ -2,7 +2,7 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import accuracy_score, classification_report
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 from sklearn.naive_bayes import MultinomialNB
 
 
@@ -46,7 +46,7 @@ def clean_training_data(input_df: pd.DataFrame, echo_feedback: bool=False) -> pd
 
     return df
 
-def split_training_data(df,rand_state=2):
+def split_training_data(df,rand_state=42):
     x = df['request_text']
     y = df['category']
     
@@ -97,6 +97,8 @@ def test_log_regres(x_train_vec, x_test_vec, y_train, y_test, echo_feedback=Fals
     if echo_feedback:
         print(f"Logistic Regression accuracy: {accuracy:.3f}")
         print(classification_report(y_test,predictions))
+        print("Confusion matrix")
+        print(confusion_matrix(y_test,predictions))
         
 
     return predictions, accuracy
@@ -133,6 +135,77 @@ def test_models_repeated(df, model_type,random_states):
 
         output.to_excel(writer, sheet_name=f"rand_{random_state}")
     writer.close()
+
+def advanced_testing(
+        model_type='log_reg',
+        min_word_count=2,
+        ngram_max=2,
+        new_norm='l2',
+        new_use_idf=True,
+        new_sublinear_tf=False,
+        csv=False):
+    #Set up
+    my_df = pd.read_csv('BCIT601_starter_service_requests_dataset.csv')
+    my_df = clean_training_data(my_df)
+    requests = my_df['request_text']
+    features = my_df['category']
+    match model_type:
+        case 'log_reg':
+            classifier = LogisticRegression(max_iter=1000)
+        case 'multi_nb':
+            classifier = MultinomialNB()
+        case _:
+            classifier = LogisticRegression(max_iter=1000)
+    vectoriser = TfidfVectorizer(
+    stop_words='english', 
+    ngram_range=(1, ngram_max), 
+    min_df=min_word_count,
+    norm=new_norm,
+    use_idf=new_use_idf,
+    sublinear_tf=new_sublinear_tf
+    )
+    success_count=0
+    # Iterative testing
+    finished_predictions = []
+    for index, request in enumerate(requests):
+        #Arrange
+        request_as_list = [request]
+        training_requests = requests.tolist()
+        training_requests.pop(index)
+        training_features = features.tolist()
+        correct_cat = training_features.pop(index)
+        #Train
+        x_train_vec = vectoriser.fit_transform(training_requests)
+        x_test_vec = vectoriser.transform(request_as_list)
+        classifier.fit(x_train_vec, training_features)
+        #Predict
+        predictions = classifier.predict(x_test_vec)
+        finished_predictions.append(predictions[0])
+        if predictions[0] == correct_cat:
+            success_count += 1
+
+#    success_rate = 0 if success_count == 0 else success_count / requests.len()
+    if csv:
+        export_cols_to_csv(
+            (
+            f"{model_type}_adv_t_mdf{min_word_count}_ngM{ngram_max}_n{new_norm}_"
+            f"idf{new_use_idf}_sub{new_sublinear_tf}.csv"
+            ),
+            requests,
+            features,
+            finished_predictions
+            )
+    print('Finished')
+    return [
+        model_type, 
+        min_word_count,
+        ngram_max,
+        new_norm,
+        new_use_idf,
+        new_sublinear_tf,
+        success_count
+    ]
+
 
 
 
