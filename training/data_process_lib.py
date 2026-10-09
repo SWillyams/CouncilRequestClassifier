@@ -1,4 +1,5 @@
 import pandas as pd
+import joblib
 from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
@@ -148,7 +149,7 @@ def advanced_testing(
     my_df = pd.read_csv('BCIT601_starter_service_requests_dataset.csv')
     my_df = clean_training_data(my_df)
     requests = my_df['request_text']
-    features = my_df['category']
+    categories = my_df['category']
     match model_type:
         case 'log_reg':
             classifier = LogisticRegression(max_iter=1000)
@@ -172,12 +173,12 @@ def advanced_testing(
         request_as_list = [request]
         training_requests = requests.tolist()
         training_requests.pop(index)
-        training_features = features.tolist()
-        correct_cat = training_features.pop(index)
+        training_categories = categories.tolist()
+        correct_cat = training_categories.pop(index)
         #Train
         x_train_vec = vectoriser.fit_transform(training_requests)
         x_test_vec = vectoriser.transform(request_as_list)
-        classifier.fit(x_train_vec, training_features)
+        classifier.fit(x_train_vec, training_categories)
         #Predict
         predictions = classifier.predict(x_test_vec)
         finished_predictions.append(predictions[0])
@@ -192,7 +193,7 @@ def advanced_testing(
             f"idf{new_use_idf}_sub{new_sublinear_tf}.csv"
             ),
             requests,
-            features,
+            categories,
             finished_predictions
             )
     print('Finished')
@@ -206,6 +207,41 @@ def advanced_testing(
         success_count
     ]
 
+
+def final_training(
+        model_type='log_reg',
+        min_word_count=1,
+        ngram_max=1,
+        new_norm='l2',
+        new_use_idf=False,
+        new_sublinear_tf=False,
+        version='' #Use to mark version numbers to retain older models if needed.
+        ):
+    #Set up
+    my_df = pd.read_csv('BCIT601_starter_service_requests_dataset.csv')
+    my_df = clean_training_data(my_df)
+    requests = my_df['request_text']
+    categories = my_df['category']
+    match model_type:
+        case 'log_reg':
+            classifier = LogisticRegression(max_iter=1000)
+        case 'multi_nb':
+            classifier = MultinomialNB()
+        case _:
+            classifier = LogisticRegression(max_iter=1000)
+    vectoriser = TfidfVectorizer(
+    stop_words='english', 
+    ngram_range=(1, ngram_max), 
+    min_df=min_word_count,
+    norm=new_norm,
+    use_idf=new_use_idf,
+    sublinear_tf=new_sublinear_tf
+    )
+    x_train_vec = vectoriser.fit_transform(requests)
+    classifier.fit(x_train_vec, categories)
+    joblib.dump(classifier, f"model{version}.joblib")
+    joblib.dump(vectoriser, f"vectoriser{version}.joblib")
+    print(f"Finished")
 
 
 

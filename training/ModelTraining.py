@@ -4,12 +4,13 @@ from data_process_lib import *
 
 cleaning_feedback = False
 vectoriser_feedback = False
-export_training_data = False
+export_training_features = False
 model_type = 'log_reg'
 test_model_feedback = False
 run_repeat_tests = False
-run_advanced_testing = True
+run_advanced_testing = False
 export_testing_to_csv = False
+run_final_model_training = True
 
 # Import data
 df = pd.read_csv('BCIT601_starter_service_requests_dataset.csv')
@@ -23,7 +24,7 @@ x_train, x_test, y_train, y_test = split_training_data(df)
 # Vectorise data
 x_train_vec, x_test_vec, feature_list = vectorize_text(x_train, x_test, vectoriser_feedback)
 
-if export_training_data:
+if export_training_features:
     export_cols_to_csv("training_data.csv", feature_list,x_train_vec, x_train,y_train)
 del feature_list
 
@@ -96,9 +97,13 @@ if run_advanced_testing:
         success_count
     )
 
+if run_final_model_training:
+    final_training()
+        #model_type='log_reg',
+        #min_word_count=1,
+        #ngram_max=1,
+        #new_norm='l2',
+        #new_use_idf=False,
+        #new_sublinear_tf=False,
+        # version='' #Use to mark version numbers to retain older models if needed.
 
-
-
-
-# Export cleaned data
-# df.to_csv('clean_data.csv', index=False)
